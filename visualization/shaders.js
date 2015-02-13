@@ -40,8 +40,9 @@ goog.require('X.base');
  *
  * @constructor
  * @extends X.base
+ * @param strict_validation enforce a weak validation instead of strict validation
  */
-X.shaders = function() {
+X.shaders = function(weak_validation) {
 
   //
   // call the standard constructor of X.base
@@ -55,6 +56,13 @@ X.shaders = function() {
    * @const
    */
   this._classname = 'shaders';
+
+  /**
+   * enforce a weak or strict validation
+   *
+   * @type {!boolean}
+   */
+  this._strict_validation = weak_validation;
 
   /**
    * The vertex shader source of this shader pair. By default, a basic shader
@@ -381,22 +389,23 @@ X.shaders.prototype.fragment = function() {
 X.shaders.prototype.validate = function() {
 
   // check if the shader sources are compatible to the attributes and uniforms
-
   var attributes = Object.keys(X.shaders.attributes);
   var uniforms = Object.keys(X.shaders.uniforms);
 
   // check if all attributes are used either in the vertex or the fragment
   // shader
   var attributesValid = attributes.every(function(a) {
-
     a = X.shaders.attributes[a];
-    return (this._vertexshaderSource.search(a) != -1) ||
+    var value = (this._vertexshaderSource.search(a) != -1) ||
         (this._fragmentshaderSource.search(a) != -1);
-
+    if(value == false) {
+      window.console
+          .log("Attributes not found: " + a) ;
+    }
+    return value ;
   }.bind(this));
 
-  if (!attributesValid) {
-
+  if (!attributesValid && ! this._strict_validation) {
     throw new Error('Could not find all attributes in the shader sources.');
 
   }
@@ -404,14 +413,17 @@ X.shaders.prototype.validate = function() {
   // check if all attributes are used either in the vertex or the fragment
   // shader
   var uniformsValid = uniforms.every(function(u) {
-
     u = X.shaders.uniforms[u];
-    return (this._vertexshaderSource.search(u) != -1) ||
+    var value = (this._vertexshaderSource.search(u) != -1) ||
         (this._fragmentshaderSource.search(u) != -1);
-
+    if(value == false) {
+      window.console
+          .log("Uniforms not found: " + u) ;
+    }
+    return value ;
   }.bind(this));
 
-  if (!uniformsValid) {
+  if (!uniformsValid && ! this._strict_validation) {
 
     throw new Error('Could not find all uniforms in the shader sources.');
 
