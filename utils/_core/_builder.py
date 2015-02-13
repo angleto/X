@@ -34,7 +34,7 @@ class Builder( object ):
     filefinder = JSFileFinder()
     jsfiles = filefinder.run()
 
-    arguments = []          
+    arguments = []
 
     # add js files
     for j in jsfiles:
@@ -54,7 +54,7 @@ class Builder( object ):
 
     # configure additional compiler arguments
     arguments.extend( [ '-f', '--warning_level=VERBOSE'] ) # verbose
-    arguments.extend( [ '-f', '--compilation_level=ADVANCED_OPTIMIZATIONS'] ) # advanced compilation
+    arguments.extend( [ '-f', '--compilation_level=SIMPLE_OPTIMIZATIONS'] ) # advanced compilation
     arguments.extend( [ '-f', '--jscomp_warning=missingProperties'] ) # enable strict mode 1
     arguments.extend( [ '-f', '--jscomp_warning=checkTypes'] ) # enable strict mode 2
     arguments.extend( ['-f', '--summary_detail_level=3'] ) # always show summary
@@ -73,11 +73,11 @@ class Builder( object ):
     #
     # call the compiler (through the closure builder)
     #
-    
+
     # make sure the closurebuilder is executable
     st = os.stat( config.CLOSUREBUILDER_PATH )
     os.chmod( config.CLOSUREBUILDER_PATH, st.st_mode | stat.S_IEXEC )
-    
+
     command = ['python', config.CLOSUREBUILDER_PATH]
     command.extend( arguments )
 
