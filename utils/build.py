@@ -14,13 +14,15 @@ from _core import *
 # entry point
 #
 if __name__ == "__main__":
-  entrypoint = Entrypoint( description='Perform a build of ' + SOFTWARE_SHORT + '.' )
+  entrypoint = Entrypoint(description='Perform a build of ' + SOFTWARE_SHORT + '.')
 
   # add debug flag
-  entrypoint.add( 'd', 'debug', 'enable debug mode during compilation' )
+  entrypoint.add('d', 'debug', 'enable debug mode during compilation')
 
-  options = entrypoint.parse( sys.argv )
+  entrypoint.add('s', 'simpleoptimizations', 'enable simple optimization instead of advanced (default)')
+
+  options = entrypoint.parse(sys.argv)
 
   builder = Builder()
-  builder.run( options )
+  builder.run(options)
 

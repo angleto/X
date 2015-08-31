@@ -23,7 +23,7 @@ class Builder( object ):
   '''
   '''
 
-  def run( self, options=None ):
+  def run(self, options=None):
     '''
     Performs the action.
     '''
@@ -54,7 +54,6 @@ class Builder( object ):
 
     # configure additional compiler arguments
     arguments.extend( [ '-f', '--warning_level=VERBOSE'] ) # verbose
-    arguments.extend( [ '-f', '--compilation_level=SIMPLE_OPTIMIZATIONS'] ) # advanced compilation
     arguments.extend( [ '-f', '--jscomp_warning=missingProperties'] ) # enable strict mode 1
     arguments.extend( [ '-f', '--jscomp_warning=checkTypes'] ) # enable strict mode 2
     arguments.extend( ['-f', '--summary_detail_level=3'] ) # always show summary
@@ -69,6 +68,10 @@ class Builder( object ):
       arguments.extend( ['-f', '--debug'] )
       arguments.extend( ['-f', '--formatting=PRETTY_PRINT'] )
 
+    if options.simpleoptimizations:
+      arguments.extend(['-f', '--compilation_level=SIMPLE_OPTIMIZATIONS'])  # advanced compilation
+    else:
+      arguments.extend(['-f', '--compilation_level=ADVANCED_OPTIMIZATIONS'])  # advanced compilation
 
     #
     # call the compiler (through the closure builder)
